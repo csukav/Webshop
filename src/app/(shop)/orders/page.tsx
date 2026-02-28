@@ -71,7 +71,7 @@ export default async function OrdersPage() {
                         </span>
                         <span>
                           {(
-                            Number(item.unit_price || 0) * item.quantity
+                            Number(item.price_at_purchase || 0) * item.quantity
                           ).toLocaleString("hu-HU")}{" "}
                           Ft
                         </span>
@@ -81,7 +81,8 @@ export default async function OrdersPage() {
                   <div className="flex justify-between font-bold border-t pt-2">
                     <span>Összesen</span>
                     <span className="text-primary">
-                      {Number(order.total ?? 0).toLocaleString("hu-HU")} Ft
+                      {Number(order.total_amount ?? 0).toLocaleString("hu-HU")}{" "}
+                      Ft
                     </span>
                   </div>
                   <p className="text-xs text-muted-foreground mt-2">

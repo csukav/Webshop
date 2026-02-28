@@ -52,7 +52,7 @@ export default function CartPage() {
       .from("orders")
       .insert({
         user_id: user.id,
-        total: total(),
+        total_amount: total(),
         shipping_address: address,
         status: "pending",
       })
@@ -60,7 +60,10 @@ export default function CartPage() {
       .single();
 
     if (error || !order) {
-      toast.error("Hiba a rendelés leadásakor!");
+      console.error("Order insert error:", error);
+      toast.error(
+        `Hiba a rendelés leadásakor: ${error?.message ?? "ismeretlen hiba"}`,
+      );
       setLoading(false);
       return;
     }
@@ -69,7 +72,7 @@ export default function CartPage() {
       order_id: order.id,
       product_id: i.product.id,
       quantity: i.quantity,
-      unit_price: i.product.price,
+      price_at_purchase: i.product.price,
     }));
 
     const { error: itemsError } = await supabase
@@ -77,7 +80,8 @@ export default function CartPage() {
       .insert(orderItems);
 
     if (itemsError) {
-      toast.error("Hiba a rendelési tételek mentésekor!");
+      console.error("Order items insert error:", itemsError);
+      toast.error(`Hiba a rendelési tételek mentésekor: ${itemsError.message}`);
       setLoading(false);
       return;
     }

@@ -28,7 +28,7 @@ export interface Order {
   id: string;
   user_id: string;
   status: "pending" | "processing" | "shipped" | "delivered" | "cancelled";
-  total: number;
+  total_amount: number;
   shipping_address: string;
   created_at: string;
   order_items?: OrderItem[];
@@ -40,7 +40,7 @@ export interface OrderItem {
   product_id: string;
   product?: Product;
   quantity: number;
-  unit_price: number;
+  price_at_purchase: number;
 }
 
 export interface Profile {

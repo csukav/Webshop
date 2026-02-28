@@ -1,9 +1,9 @@
-import { createClient } from "@/lib/supabase/server";
+import { createServiceClient } from "@/lib/supabase/service";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Package, Tag, ShoppingBag, TrendingUp } from "lucide-react";
 
 export default async function AdminDashboard() {
-  const supabase = await createClient();
+  const supabase = createServiceClient();
 
   const [
     { count: productCount },
@@ -16,18 +16,19 @@ export default async function AdminDashboard() {
     supabase.from("orders").select("*", { count: "exact", head: true }),
     supabase
       .from("orders")
-      .select("id, total, status, created_at")
+      .select("id, total_amount, status, created_at")
       .order("created_at", { ascending: false })
       .limit(5),
   ]);
 
   const { data: revenueData } = await supabase
     .from("orders")
-    .select("total")
+    .select("total_amount")
     .eq("status", "delivered");
 
   const totalRevenue =
-    revenueData?.reduce((sum, o) => sum + (Number(o.total) || 0), 0) ?? 0;
+    revenueData?.reduce((sum, o) => sum + (Number(o.total_amount) || 0), 0) ??
+    0;
 
   const stats = [
     {
@@ -94,7 +95,7 @@ export default async function AdminDashboard() {
                     #{order.id.slice(0, 8).toUpperCase()}
                   </span>
                   <span className="font-medium">
-                    {Number(order.total ?? 0).toLocaleString("hu-HU")} Ft
+                    {Number(order.total_amount ?? 0).toLocaleString("hu-HU")} Ft
                   </span>
                   <span className="capitalize text-muted-foreground">
                     {order.status}

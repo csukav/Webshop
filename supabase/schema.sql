@@ -84,7 +84,7 @@ create table if not exists public.orders (
   user_id uuid references auth.users(id) on delete cascade not null,
   status text not null default 'pending'
     check (status in ('pending','processing','shipped','delivered','cancelled')),
-  total numeric(10,2) not null check (total >= 0),
+  total_amount numeric(10,2) not null check (total_amount >= 0),
   shipping_address text not null,
   created_at timestamptz default now()
 );
@@ -95,7 +95,7 @@ create table if not exists public.order_items (
   order_id uuid references public.orders(id) on delete cascade not null,
   product_id uuid references public.products(id) on delete set null,
   quantity integer not null check (quantity > 0),
-  unit_price numeric(10,2) not null check (unit_price >= 0)
+  price_at_purchase numeric(10,2) not null check (price_at_purchase >= 0)
 );
 
 -- ================================================================
